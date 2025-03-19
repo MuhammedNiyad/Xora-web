@@ -51,7 +51,7 @@ const Header = () => {
                     spy
                     smooth
                     className={clsx(
-                      "max-lg:hidden, transition-transform duration-500 cursor-pointer "
+                      "max-lg:hidden transition-transform duration-150 cursor-pointer "
                     )}
                   >
                     <img
