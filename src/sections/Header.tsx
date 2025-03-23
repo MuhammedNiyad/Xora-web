@@ -1,35 +1,46 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as LinkScroll } from "react-scroll";
 
 interface navLinkProp {
   title: string;
 }
 
-const NavLink = ({ title }: navLinkProp) => (
-  <LinkScroll
-    to=""
-    readOnly
-    className="base-bold text-p4 uppercase transition-colors duration-500 cursor-pointer hover:text-p1 max-lg:my-4 max-lg:h-5"
-  >
-    {title}
-  </LinkScroll>
-);
 
 const Header = () => {
   const [toggle, setToggle] = useState<boolean>(false);
+  const [hasScroll, setHasScroll] = useState<boolean>(false);
+
+  useEffect(()=>{
+    const handleScroll = () => {
+      setHasScroll(window.scrollY > 32);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  },[])
+
+  const NavLink = ({ title }: navLinkProp) => (
+    <LinkScroll
+      to={title} offset={-100} spy smooth activeClass="nav-active"
+      onClick={() => setToggle(false)}
+      readOnly
+      className="base-bold text-p4 uppercase transition-colors duration-500 cursor-pointer hover:text-p1 max-lg:my-4 max-lg:h-5"
+    >
+      {title}
+    </LinkScroll>
+  );
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full py-5">
+    <header className={clsx("fixed top-0 left-0 z-50 w-full py-5 transition-all duration-500 max-lg:py-4", hasScroll && "py-2 bg-black/10 backdrop-blur-[8px] shadow-lg ")}>
       <div className="container flex h-14 items-center max-lg:px-5">
-        <a className="lg:hidden flex-1 cursor-pointer z-2">
+        <LinkScroll to="hero" offset={-250} spy smooth onClick={() => setToggle(false)} className="lg:hidden flex-1 cursor-pointer z-2">
           <img
             src="/public/images/xora.svg"
             alt="logo"
             width={115}
             height={55}
           />
-        </a>
+        </LinkScroll>
         <div
           className={clsx(
             "w-full max-lg:fixed max-lg:top-0 max-lg:left-0 max-lg:w-full max-lg:bg-s2 max-lg:opacity-0",
@@ -47,7 +58,7 @@ const Header = () => {
                 <li className="nav-logo">
                   <LinkScroll
                     to="hero"
-                    offset={-100}
+                    offset={-250}
                     spy
                     smooth
                     className={clsx(
